@@ -19,14 +19,18 @@ Supposedly you created a new Ubuntu 18.04 VM (eg a Digital Ocean droplet) and ha
 
 `HOST=address make setup-ssh` will copy `.ssh` directory from root's home directory to your new user's home directory (in case you want to log in via ssh as this user)
 
-`HOST=address make setup-docker` will install docker and docker-compose and add your user to the docker group
+`HOST=address make setup-guest` will copy guest.py to the root directory
+
+`HOST=address make setup-docker` will install nginx, docker and docker-compose and add your user to the docker group
 
 `HOST=address make setup-server` will do all of the above
 
 
 ## Managing docker-compose
 
-Supposedly your project has `docker-compose-deploy.yml` and the files are in the directory `~/$PROJECT` at `$HOST`
+Supposedly your project has `docker-compose-deploy.yml` and the files are in the directory `~/$PROJECT` at `$HOST`. Your docker-compose config exposes it at port `$APP_PORT` and you want the local nginx proxy to serve it on `$APP_HOST:` at port 80 to outside world
+
+`APP_HOST=host APP_PORT=port make setup-proxy` will create nginx config and restart nginx
 
 `HOST=address PROJECT=project SERVICES="a b c" make deploy-update` will log in to the server as your user, cd into a directory of your project, run git pull, rebuild and restart your services.
 

@@ -1,5 +1,5 @@
 include userenv.sh
-PHONY: setup-user setup-ssh setup-docker deploy-update full-update
+PHONY: setup-user setup-ssh setup-docker setup-guest deploy-update full-update
 
 setup-user:
 	echo "useradd $(USER) -p $(PASSWORD) -m -s /bin/bash -G sudo" | ssh root@$(HOST) ;\
@@ -7,12 +7,23 @@ setup-user:
 setup-ssh:
 	echo "rsync --archive --chown=$(USER):$(USER) ~/.ssh /home/$(USER)" | ssh root@$(HOST) ;\
 
-setup-docker:
-	cat install-docker.sh | ssh root@$(HOST) ;\
-	echo "usermod -aG docker $(USER)" | ssh root@$(HOST) ;\
-	echo "systemctl status docker" | ssh root@$(HOST) ;\
+setup-guest:
+	scp guest.py root@$(HOST): ;\
 
-setup-server: setup-user setup-ssh setup-docker
+setup-docker:
+	( \
+		cat install-docker.sh ;\
+		echo "usermod -aG docker $(USER)" ;\
+	) | ssh root@$(HOST) ;\
+
+setup-server: setup-user setup-ssh setup-guest setup-docker
+
+setup-proxy:
+	( \
+		echo "python3 guest.py $(APP_HOST) $(APP_PORT)" ;\
+		echo "service nginx restart" ;\
+	) | ssh root@$(HOST) ;\
+
 
 deploy-update:
 	( \
