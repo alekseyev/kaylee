@@ -22,3 +22,12 @@ Supposedly you created a new Ubuntu 18.04 VM (eg a Digital Ocean droplet) and ha
 `HOST=address make setup-docker` will install docker and docker-compose and add your user to the docker group
 
 `HOST=address make setup-server` will do all of the above
+
+
+## Managing docker-compose
+
+Supposedly your project has `docker-compose-deploy.yml` and the files are in the directory `~/$PROJECT` at `$HOST`
+
+`HOST=address PROJECT=project SERVICES="a b c" make deploy-update` will log in to the server as your user, cd into a directory of your project, run git pull, rebuild and restart your services.
+
+`HOST=address PROJECT=project make full-update` will do the same with rebuilding and restarting all your services
