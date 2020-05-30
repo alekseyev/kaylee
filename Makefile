@@ -38,7 +38,7 @@ full-update:
 	( \
 		echo "cd $(PROJECT)" ;\
 		echo "git pull" ;\
-		echo "docker-compose -f docker-compose-deploy.yml build " ;\
+		echo "docker-compose -f docker-compose-deploy.yml build --no-cache" ;\
 		echo "docker-compose -f docker-compose-deploy.yml down " ;\
 		echo "docker-compose -f docker-compose-deploy.yml up -d " ;\
 	) | ssh $(USER)@$(HOST) ;\
