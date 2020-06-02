@@ -42,3 +42,9 @@ full-update:
 		echo "docker-compose -f docker-compose-deploy.yml down " ;\
 		echo "docker-compose -f docker-compose-deploy.yml up -d " ;\
 	) | ssh $(USER)@$(HOST) ;\
+
+logs:
+	( \
+		echo "cd $(PROJECT)" ;\
+		echo "docker-compose -f docker-compose-deploy.yml logs -f --tail=100" ;\
+	) | ssh $(USER)@$(HOST) ;\
